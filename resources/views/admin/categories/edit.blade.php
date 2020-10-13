@@ -228,7 +228,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="imageselected">
-                                                    {!! Form::button(trans('labels.Add Icon'), array('id'=>'newIcon','class'=>"btn btn-primary ", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone" )) !!}
+                                                    {!! Form::button(trans('labels.Add Icon (English)'), array('id'=>'newIcon','class'=>"btn btn-primary ", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone" )) !!}
                                                     <br>
                                                     <div id="selectedthumbnailIcon" class="selectedthumbnail col-md-5"> </div>
                                                     <div class="closimage">
@@ -274,7 +274,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="imageselected1">
-                                                    {!! Form::button(trans('labels.Add Icon'), array('id'=>'newIcon1','class'=>"btn btn-primary ", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone1" )) !!}
+                                                    {!! Form::button(trans('labels.Add Icon (Arabic)'), array('id'=>'newIcon1','class'=>"btn btn-primary ", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone1" )) !!}
                                                     <br>
                                                     <div id="selectedthumbnailIcon1" class="selectedthumbnail col-md-5"> </div>
                                                     <div class="closimage">

@@ -76,8 +76,6 @@ class Categories extends Model
       $setting = new Setting();
       $myVarsetting = new SiteSettingController($setting);
       $commonsetting = $myVarsetting->commonsetting();
-      $language_id == Session::get('language_id');
-      if ($language_id == 1){
         $categories = Categories::sortable(['categories_id'=>'ASC'])
         ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
         ->LeftJoin('image_categories as categoryTable', function ($join) {
@@ -113,44 +111,7 @@ class Categories extends Model
          
          ->groupby('categories.categories_id')
          ->paginate(50);
-      }
-      else {
-        $categories = Categories::sortable(['categories_id'=>'ASC'])
-        ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
-        ->LeftJoin('image_categories as categoryTable', function ($join) {
-             $join->on('categoryTable.image_id', '=', 'categories.categories_image1')
-                 ->where(function ($query) {
-                     $query->where('categoryTable.image_type', '=', 'THUMBNAIL')
-                         ->where('categoryTable.image_type', '!=', 'THUMBNAIL')
-                         ->orWhere('categoryTable.image_type', '=', 'ACTUAL');
-                 });
-         })
-         ->LeftJoin('image_categories as iconTable', function ($join) {
-             $join->on('iconTable.image_id', '=', 'categories.categories_icon1')
-                 ->where(function ($query) {
-                     $query->where('iconTable.image_type', '=', 'THUMBNAIL')
-                         ->where('iconTable.image_type', '!=', 'THUMBNAIL')
-                         ->orWhere('iconTable.image_type', '=', 'ACTUAL');
-                 });
-         })
-
-         ->LeftJoin('categories_description as parent_description', function ($join) {
-             $join->on('parent_description.categories_id', '=', 'categories.parent_id')
-                 ->where(function ($query) {
-                     $query->where('parent_description.language_id', '=', 1)->limit(1);
-                 });
-         })
-         ->select('categories.categories_id as id', 'categories.categories_image1 as image',
-         'categories.categories_icon1 as icon',  'categories.created_at as date_added',
-         'categories.updated_at as last_modified', 'categories_description.categories_name as name',
-         'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath', 
-         'categories.categories_status  as categories_status', 'parent_description.categories_name as parent_name')
       
-         ->where('categories_description.language_id', '1')
-         
-         ->groupby('categories.categories_id')
-         ->paginate(50);
-      }
       
             //->paginate($commonsetting['pagination']);
 
