@@ -76,62 +76,116 @@ class Categories extends Model
       $setting = new Setting();
       $myVarsetting = new SiteSettingController($setting);
       $commonsetting = $myVarsetting->commonsetting();
+      $language_id == Session::get('language_id');
+      if ($language_id == 1){
+        $categories = Categories::sortable(['categories_id'=>'ASC'])
+        ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+        ->LeftJoin('image_categories as categoryTable', function ($join) {
+             $join->on('categoryTable.image_id', '=', 'categories.categories_image')
+                 ->where(function ($query) {
+                     $query->where('categoryTable.image_type', '=', 'THUMBNAIL')
+                         ->where('categoryTable.image_type', '!=', 'THUMBNAIL')
+                         ->orWhere('categoryTable.image_type', '=', 'ACTUAL');
+                 });
+         })
+         ->LeftJoin('image_categories as iconTable', function ($join) {
+             $join->on('iconTable.image_id', '=', 'categories.categories_icon')
+                 ->where(function ($query) {
+                     $query->where('iconTable.image_type', '=', 'THUMBNAIL')
+                         ->where('iconTable.image_type', '!=', 'THUMBNAIL')
+                         ->orWhere('iconTable.image_type', '=', 'ACTUAL');
+                 });
+         })
 
-      $categories = Categories::sortable(['categories_id'=>'ASC'])
-           ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
-           ->LeftJoin('image_categories as categoryTable', function ($join) {
-                $join->on('categoryTable.image_id', '=', 'categories.categories_image')
-                    ->where(function ($query) {
-                        $query->where('categoryTable.image_type', '=', 'THUMBNAIL')
-                            ->where('categoryTable.image_type', '!=', 'THUMBNAIL')
-                            ->orWhere('categoryTable.image_type', '=', 'ACTUAL');
-                    });
-            })
-            ->LeftJoin('image_categories as iconTable', function ($join) {
-                $join->on('iconTable.image_id', '=', 'categories.categories_icon')
-                    ->where(function ($query) {
-                        $query->where('iconTable.image_type', '=', 'THUMBNAIL')
-                            ->where('iconTable.image_type', '!=', 'THUMBNAIL')
-                            ->orWhere('iconTable.image_type', '=', 'ACTUAL');
-                    });
-            })
-
-            ->LeftJoin('categories_description as parent_description', function ($join) {
-                $join->on('parent_description.categories_id', '=', 'categories.parent_id')
-                    ->where(function ($query) {
-                        $query->where('parent_description.language_id', '=', 1)->limit(1);
-                    });
-            })
-            ->select('categories.categories_id as id', 'categories.categories_image as image',
-            'categories.categories_icon as icon',  'categories.created_at as date_added',
-            'categories.updated_at as last_modified', 'categories_description.categories_name as name',
-            'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath', 
-            'categories.categories_status  as categories_status', 'parent_description.categories_name as parent_name')
+         ->LeftJoin('categories_description as parent_description', function ($join) {
+             $join->on('parent_description.categories_id', '=', 'categories.parent_id')
+                 ->where(function ($query) {
+                     $query->where('parent_description.language_id', '=', 1)->limit(1);
+                 });
+         })
+         ->select('categories.categories_id as id', 'categories.categories_image as image',
+         'categories.categories_icon as icon',  'categories.created_at as date_added',
+         'categories.updated_at as last_modified', 'categories_description.categories_name as name',
+         'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath', 
+         'categories.categories_status  as categories_status', 'parent_description.categories_name as parent_name')
+      
+         ->where('categories_description.language_id', '1')
          
-            ->where('categories_description.language_id', '1')
-            
-            ->groupby('categories.categories_id')
-            ->paginate(50);
+         ->groupby('categories.categories_id')
+         ->paginate(50);
+      }
+      else {
+        $categories = Categories::sortable(['categories_id'=>'ASC'])
+        ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+        ->LeftJoin('image_categories as categoryTable', function ($join) {
+             $join->on('categoryTable.image_id', '=', 'categories.categories_image1')
+                 ->where(function ($query) {
+                     $query->where('categoryTable.image_type', '=', 'THUMBNAIL')
+                         ->where('categoryTable.image_type', '!=', 'THUMBNAIL')
+                         ->orWhere('categoryTable.image_type', '=', 'ACTUAL');
+                 });
+         })
+         ->LeftJoin('image_categories as iconTable', function ($join) {
+             $join->on('iconTable.image_id', '=', 'categories.categories_icon1')
+                 ->where(function ($query) {
+                     $query->where('iconTable.image_type', '=', 'THUMBNAIL')
+                         ->where('iconTable.image_type', '!=', 'THUMBNAIL')
+                         ->orWhere('iconTable.image_type', '=', 'ACTUAL');
+                 });
+         })
+
+         ->LeftJoin('categories_description as parent_description', function ($join) {
+             $join->on('parent_description.categories_id', '=', 'categories.parent_id')
+                 ->where(function ($query) {
+                     $query->where('parent_description.language_id', '=', 1)->limit(1);
+                 });
+         })
+         ->select('categories.categories_id as id', 'categories.categories_image1 as image',
+         'categories.categories_icon1 as icon',  'categories.created_at as date_added',
+         'categories.updated_at as last_modified', 'categories_description.categories_name as name',
+         'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath', 
+         'categories.categories_status  as categories_status', 'parent_description.categories_name as parent_name')
+      
+         ->where('categories_description.language_id', '1')
+         
+         ->groupby('categories.categories_id')
+         ->paginate(50);
+      }
+      
             //->paginate($commonsetting['pagination']);
 
             return ($categories);
     }
 
     public function getter($language_id){
-      $listingCategories = DB::table('categories')
+        if ($language_id == 1){
+            $listingCategories = DB::table('categories')
+            ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+            ->select('categories.categories_id as id', 'categories.categories_image as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug'
+            , 'categories.parent_id')
+            ->where('categories_description.language_id','=', $language_id )
+            ->where('parent_id','>', '0')
+            ->where('categories_status', '1')
+            ->get();
+        }
+        else {
+            $listingCategories = DB::table('categories')
           ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
-          ->select('categories.categories_id as id', 'categories.categories_image as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug'
+          ->select('categories.categories_id as id', 'categories.categories_image1 as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug'
           , 'categories.parent_id')
           ->where('categories_description.language_id','=', $language_id )
           ->where('parent_id','>', '0')
           ->where('categories_status', '1')
           ->get();
+        }
+      
 
        return $listingCategories;
     }
 
     public function getterParent($language_id){
-        $listingCategories = DB::table('categories')
+        if ($language_id == 1){
+            $listingCategories = DB::table('categories')
             ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
             ->select('categories.categories_id as id', 'categories.categories_image as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug'
             , 'categories.parent_id')
@@ -139,17 +193,40 @@ class Categories extends Model
             ->where('parent_id', '0')
             ->where('categories_status', '1')
             ->get();
+        }
+        else {
+            $listingCategories = DB::table('categories')
+            ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+            ->select('categories.categories_id as id', 'categories.categories_image1 as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug'
+            , 'categories.parent_id')
+            ->where('categories_description.language_id','=', $language_id )
+            ->where('parent_id', '0')
+            ->where('categories_status', '1')
+            ->get();
+        }
+        
   
          return $listingCategories;
       }
 
     public function allcategories($language_id){
-        $listingCategories = DB::table('categories')
+        if ($language_id == 1){
+            $listingCategories = DB::table('categories')
             ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
             ->select('categories.categories_id as id', 'categories.categories_image as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug')
             ->where('categories_description.language_id','=', $language_id )
             ->where('categories_status', '1')
             ->get();
+        }
+        else {
+            $listingCategories = DB::table('categories')
+            ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+            ->select('categories.categories_id as id', 'categories.categories_image1 as image',  'categories.created_at as date_added', 'categories.updated_at as last_modified', 'categories_description.categories_name as name', 'categories.categories_slug as slug')
+            ->where('categories_description.language_id','=', $language_id )
+            ->where('categories_status', '1')
+            ->get();
+        }
+        
   
          return $listingCategories;
       }
@@ -160,16 +237,40 @@ class Categories extends Model
 
       switch ( $name ) {
           case 'Name':
-              $categories = Categories::sortable(['categories_id'=>'ASC'])
+            if ($language_id == 1) {
+                $categories = Categories::sortable(['categories_id'=>'ASC'])
+                ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+                    ->leftJoin('images','images.id', '=', 'categories.categories_image')
+                    ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image')
+                    ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon')
+                    ->select('categories.categories_id as id', 'categories.categories_image as image',
+                    'categories.categories_icon as icon',  'categories.created_at as date_added',
+                    'categories.updated_at as last_modified', 'categories_description.categories_name as name',
+                    'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath','categories.categories_status  as categories_status')
+                    ->where('categories_description.language_id', '1')
+                    ->where(function($query) {
+                        $query->where('categoryTable.image_type', '=',  'THUMBNAIL')
+                            ->where('categoryTable.image_type','!=',   'THUMBNAIL')
+                            ->orWhere('categoryTable.image_type','=',   'ACTUAL')
+                            ->where('iconTable.image_type', '=',  'THUMBNAIL')
+                            ->where('iconTable.image_type','!=',   'THUMBNAIL')
+                            ->orWhere('iconTable.image_type','=',   'ACTUAL');
+                    })
+                    ->where('categories_description.categories_name', 'LIKE', '%' . $param . '%')
+                    ->groupby('categories.categories_id')
+                    ->paginate(10);
+            }
+            else {
+                $categories = Categories::sortable(['categories_id'=>'ASC'])
                     ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
-                        ->leftJoin('images','images.id', '=', 'categories.categories_image')
-                        ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image')
-                        ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon')
-                        ->select('categories.categories_id as id', 'categories.categories_image as image',
-                        'categories.categories_icon as icon',  'categories.created_at as date_added',
+                        ->leftJoin('images','images.id', '=', 'categories.categories_image1')
+                        ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image1')
+                        ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon1')
+                        ->select('categories.categories_id as id', 'categories.categories_image1 as image',
+                        'categories.categories_icon as icon1',  'categories.created_at as date_added',
                         'categories.updated_at as last_modified', 'categories_description.categories_name as name',
                         'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath','categories.categories_status  as categories_status')
-                        ->where('categories_description.language_id', '1')
+                        ->where('categories_description.language_id', $language_id)
                         ->where(function($query) {
                             $query->where('categoryTable.image_type', '=',  'THUMBNAIL')
                                 ->where('categoryTable.image_type','!=',   'THUMBNAIL')
@@ -181,23 +282,51 @@ class Categories extends Model
                         ->where('categories_description.categories_name', 'LIKE', '%' . $param . '%')
                         ->groupby('categories.categories_id')
                         ->paginate(10);
+            }
+              
 
           break;
           case 'Main':
+            if ($language_id == 1){
+                $categories = Categories::sortable(['categories_id'=>'ASC'])
+                ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
 
-              $categories = Categories::sortable(['categories_id'=>'ASC'])
+                ->leftJoin('categories as mainCategory','mainCategory.categories_id', '=', 'categories.categories_id')
+                ->leftJoin('categories_description as mainCategoryDesc','mainCategoryDesc.categories_id', '=', 'categories.parent_id')
+
+                ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image')
+                ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon')
+
+                ->select(
+                    'categories.categories_id as subId',
+                    'categories.categories_image as image',
+                    'categories.categories_icon as icon',
+                    'categories.created_at as date_added',
+                    'categories.updated_at as last_modified',
+                    'categories_description.categories_name as subCategoryName',
+                    'mainCategoryDesc.categories_name as mainCategoryName',
+                    'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath'
+                )
+                ->where('categories.parent_id', '>', '0')
+                ->where('mainCategoryDesc.categories_name', 'LIKE', '%' . $param . '%')
+                ->where('mainCategoryDesc.language_id', '1')
+                ->where('categories_description.language_id', '1')
+                ->groupby('categories.categories_id')
+                ->paginate(10);
+            } else {
+                $categories = Categories::sortable(['categories_id'=>'ASC'])
                   ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
 
                   ->leftJoin('categories as mainCategory','mainCategory.categories_id', '=', 'categories.categories_id')
                   ->leftJoin('categories_description as mainCategoryDesc','mainCategoryDesc.categories_id', '=', 'categories.parent_id')
 
-                  ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image')
-                  ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon')
+                  ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image1')
+                  ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon1')
 
                   ->select(
                       'categories.categories_id as subId',
-                      'categories.categories_image as image',
-                      'categories.categories_icon as icon',
+                      'categories.categories_image1 as image',
+                      'categories.categories_icon1 as icon',
                       'categories.created_at as date_added',
                       'categories.updated_at as last_modified',
                       'categories_description.categories_name as subCategoryName',
@@ -207,34 +336,63 @@ class Categories extends Model
                   ->where('categories.parent_id', '>', '0')
                   ->where('mainCategoryDesc.categories_name', 'LIKE', '%' . $param . '%')
                   ->where('mainCategoryDesc.language_id', '1')
-                  ->where('categories_description.language_id', '1')
+                  ->where('categories_description.language_id', $language_id)
                   ->groupby('categories.categories_id')
                   ->paginate(10);
+            }
+              
               break;
           default:
-              $categories = Categories::sortable(['categories_id'=>'ASC'])
-                  ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+          if ($language_id == 1){
+            $categories = Categories::sortable(['categories_id'=>'ASC'])
+            ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
 
-                  ->leftJoin('categories as mainCategory','mainCategory.categories_id', '=', 'categories.categories_id')
-                  ->leftJoin('categories_description as mainCategoryDesc','mainCategoryDesc.categories_id', '=', 'categories.parent_id')
+            ->leftJoin('categories as mainCategory','mainCategory.categories_id', '=', 'categories.categories_id')
+            ->leftJoin('categories_description as mainCategoryDesc','mainCategoryDesc.categories_id', '=', 'categories.parent_id')
 
-                  ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image')
-                  ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon')
+            ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image')
+            ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon')
 
-                  ->select(
-                      'categories.categories_id as subId',
-                      'categories.categories_image as image',
-                      'categories.categories_icon as icon',
-                      'categories.created_at as date_added',
-                      'categories.updated_at as last_modified',
-                      'categories_description.categories_name as subCategoryName',
-                      'mainCategoryDesc.categories_name as mainCategoryName',
-                      'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath'
-                  )
-                  ->where('categories.parent_id', '>', '0')->where('mainCategoryDesc.language_id', '1')
-                  ->where('categories_description.language_id', '1')
-                  ->groupby('categories.categories_id')
-                  ->paginate(10);
+            ->select(
+                'categories.categories_id as subId',
+                'categories.categories_image as image',
+                'categories.categories_icon as icon',
+                'categories.created_at as date_added',
+                'categories.updated_at as last_modified',
+                'categories_description.categories_name as subCategoryName',
+                'mainCategoryDesc.categories_name as mainCategoryName',
+                'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath'
+            )
+            ->where('categories.parent_id', '>', '0')->where('mainCategoryDesc.language_id', '1')
+            ->where('categories_description.language_id', '1')
+            ->groupby('categories.categories_id')
+            ->paginate(10);
+          } else {
+            $categories = Categories::sortable(['categories_id'=>'ASC'])
+            ->leftJoin('categories_description','categories_description.categories_id', '=', 'categories.categories_id')
+
+            ->leftJoin('categories as mainCategory','mainCategory.categories_id', '=', 'categories.categories_id')
+            ->leftJoin('categories_description as mainCategoryDesc','mainCategoryDesc.categories_id', '=', 'categories.parent_id')
+
+            ->leftJoin('image_categories as categoryTable','categoryTable.image_id', '=', 'categories.categories_image1')
+            ->leftJoin('image_categories as iconTable','iconTable.image_id', '=', 'categories.categories_icon1')
+
+            ->select(
+                'categories.categories_id as subId',
+                'categories.categories_image1 as image',
+                'categories.categories_icon1 as icon',
+                'categories.created_at as date_added',
+                'categories.updated_at as last_modified',
+                'categories_description.categories_name as subCategoryName',
+                'mainCategoryDesc.categories_name as mainCategoryName',
+                'categories_description.language_id','categoryTable.path as imgpath','iconTable.path as iconpath'
+            )
+            ->where('categories.parent_id', '>', '0')->where('mainCategoryDesc.language_id', '1')
+            ->where('categories_description.language_id', '1')
+            ->groupby('categories.categories_id')
+            ->paginate(10);
+          }
+              
               break;
             }
         return $categories;
@@ -269,7 +427,8 @@ class Categories extends Model
     }
 
     public function edit($request){
-        $category = DB::table('categories') ->leftJoin('images','images.id', '=', 'categories.categories_image')
+        $category = DB::table('categories') 
+            ->leftJoin('images','images.id', '=', 'categories.categories_image')
             ->leftJoin('image_categories as ImageTable','ImageTable.image_id', '=', 'categories.categories_image')
             ->leftJoin('image_categories as IconTable','IconTable.image_id', '=', 'categories.categories_icon')
             ->select('categories.categories_id as id', 'categories.categories_image as image',

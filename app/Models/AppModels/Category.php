@@ -29,7 +29,7 @@ class Category extends Model
 
     public static function getCategories($request)
     {
-        $language_id = '1';
+        $language_id = Session::get('language_id');
 
         if (empty($request->category_id)) {
             $category_id = '0';
