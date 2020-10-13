@@ -98,7 +98,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="modal-footer">
-                                                               <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image') }}</a>
+                                                               <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image (English)') }}</a>
                                                                <button type="button" class="btn btn-default refresh-image"><i class="fa fa-refresh"></i></button>
                                                                <button type="button" class="btn btn-primary" id="selected" data-dismiss="modal">{{ trans('labels.Done') }}</button>
                                                             </div>
@@ -107,7 +107,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="imageselected">
-                                                    {!! Form::button(trans('labels.Add Image'), array('id'=>'newImage','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#Modalmanufactured" )) !!}
+                                                    {!! Form::button(trans('labels.Add Image (English)'), array('id'=>'newImage','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#Modalmanufactured" )) !!}
                                                     <br>
                                                     <div id="selectedthumbnail" class="selectedthumbnail col-md-5"> </div>
                                                     <div class="closimage">
@@ -143,7 +143,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="modal-footer">
-                                                               <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image') }}</a>
+                                                               <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image (Arabic)') }}</a>
                                                                <button type="button" class="btn btn-default refresh-image"><i class="fa fa-refresh"></i></button>
                                                                <button type="button" class="btn btn-primary" id="selected1" data-dismiss="modal">{{ trans('labels.Done') }}</button>
                                                             </div>
@@ -152,7 +152,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="imageselected1">
-                                                    {!! Form::button(trans('labels.Add Image'), array('id'=>'newImage1','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#Modalmanufactured1" )) !!}
+                                                    {!! Form::button(trans('labels.Add Image (Arabic)'), array('id'=>'newImage1','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#Modalmanufactured1" )) !!}
                                                     <br>
                                                     <div id="selectedthumbnail1" class="selectedthumbnail col-md-5"> </div>
                                                     <div class="closimage">
@@ -188,7 +188,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="modal-footer">
-                                                              <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image') }}</a>
+                                                              <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image (English)') }}</a>
                                                               <button type="button" class="btn btn-default refresh-image"><i class="fa fa-refresh"></i></button>
                                                               <button type="button" class="btn btn-primary" id="selectedICONE" data-dismiss="modal">{{ trans('labels.Done') }}</button>
                                                             </div>
@@ -196,7 +196,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="imageselected">
-                                                  {!! Form::button(trans('labels.Add Icon'), array('id'=>'newIcon','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone" )) !!}
+                                                  {!! Form::button(trans('labels.Add Icon (English)'), array('id'=>'newIcon','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone" )) !!}
                                                   <br>
                                                   <div id="selectedthumbnailIcon" class="selectedthumbnail col-md-5"> </div>
                                                   <div class="closimage">
@@ -233,7 +233,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="modal-footer">
-                                                              <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image') }}</a>
+                                                              <a href="{{url('admin/media/add')}}" target="_blank" class="btn btn-primary pull-left" >{{ trans('labels.Add Image (Arabic)') }}</a>
                                                               <button type="button" class="btn btn-default refresh-image"><i class="fa fa-refresh"></i></button>
                                                               <button type="button" class="btn btn-primary" id="selectedICONE1" data-dismiss="modal">{{ trans('labels.Done') }}</button>
                                                             </div>
@@ -241,7 +241,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="imageselected1">
-                                                  {!! Form::button(trans('labels.Add Icon'), array('id'=>'newIcon1','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone1" )) !!}
+                                                  {!! Form::button(trans('labels.Add Icon (Arabic)'), array('id'=>'newIcon1','class'=>"btn btn-primary field-validate", 'data-toggle'=>"modal", 'data-target'=>"#ModalmanufacturedICone1" )) !!}
                                                   <br>
                                                   <div id="selectedthumbnailIcon1" class="selectedthumbnail col-md-5"> </div>
                                                   <div class="closimage">
